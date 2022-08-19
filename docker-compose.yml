@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+
+  # node js app server
+  app_server:
+    container_name: nest_js
+    command: yarn start:dev
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+    links:
+      - database
+    depends_on:
+      - database
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+
+  #  database service
+  database:
+    container_name: postgres
+    image: postgres:13.6-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    # ports:
+    #   - "5432:5432"
+    networks:
+      - backend
+
+# docker network
+networks:
+  backend:
+volumes:
+  pg_data:
+    driver: local
