@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
 import { UserDto } from '@users/dto/user.dto';
 import { Serialize } from 'src/common/interceptors/serializer';
 import { AuthService } from './auth.service';
@@ -18,8 +18,19 @@ export class AuthController {
 
   @Post('signup')
   signup(@Body() body: SignUpDto) {
-    const user = this.authService.signup(body);
-    return user;
+    const { email, phoneNumber } = body;
+
+    if (!email && !phoneNumber) {
+      throw new BadRequestException('email or phoneNumber is required');
+    }
+
+    try {
+      const user = this.authService.signup(body);
+      return user;
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException();
+    }
   }
 
   //   forgotPassword() {}

@@ -10,6 +10,43 @@ Content-Type: application/json
 
 {
     "email":"test@test.com",
-    "phoneNumber":"+9779841000009",
+    "phoneNumber":"+9779841000001",
     "password":"password"
 }
+
+
+### sign in
+POST http://localhost:8000/signin
+Content-Type: application/json
+
+{
+    "phoneNumber":"+9779841000003",
+    "password":"password"
+}
+
+
+### get all users 
+
+GET http://localhost:8000/users
+
+
+
+### get one user 
+
+GET http://localhost:8000/users/1
+
+
+
+### update user 
+
+PATCH http://localhost:8000/users/1 
+Content-Type: application/json
+
+{
+    "email":"new@test.com"
+}
+
+
+#### delete user 
+DELETE http://localhost:8000/users/1
+Content-Type: application/json

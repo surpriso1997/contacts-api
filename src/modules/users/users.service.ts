@@ -56,15 +56,14 @@ export class UsersService {
     }
     Object.assign(user, updateUserDto);
 
-    this.repo.save(user);
+    return this.repo.save(user);
   }
 
   async remove(id: number) {
     const user = await this.findOne(id);
     if (!user) {
       throw new NotFoundException('User not found');
-
-      this.repo.remove(user);
     }
+    return this.repo.remove(user);
   }
 }

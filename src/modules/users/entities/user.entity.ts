@@ -1,13 +1,20 @@
+import { Contact } from '@contacts/entities/contact.entity';
 import { Exclude } from 'class-transformer';
 import { Role } from 'src/common/utils/roles';
-import { Column, Entity, Generated, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Generated,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
@@ -21,6 +28,9 @@ export class User {
   @Column({ default: Role.user })
   role: string;
 
-  @Column()
+  @Column({ unique: true })
   phoneNumber: string;
+
+  @OneToMany(() => Contact, (contact) => contact.user)
+  contacts: Contact[];
 }

@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@users/entities/user.entity';
+import { Contact } from '@contacts/entities/contact.entity';
 @Module({
   imports: [
     AuthModule,
@@ -20,18 +21,15 @@ import { User } from '@users/entities/user.entity';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        console.log(process.env);
         return {
           type: 'postgres',
-          // database: config.get<string>('POSTGRES_DB'),
-          // password: config.get<string>('POSTGRES_PASSWORD'),
-          // username: config.get<string>('POSTGRES_USER'),
-          // host: config.get<string>('POSTGRES_HOST'),
-          password: 'password',
-          username: 'postgres',
-          host: 'localhost',
+          database: config.get<string>('POSTGRES_DB'),
+          password: config.get<string>('POSTGRES_PASSWORD'),
+          username: config.get<string>('POSTGRES_USER'),
+          host: config.get<string>('POSTGRES_HOST'),
+
           port: 7000,
-          entities: [User],
+          entities: [User, Contact],
           migrationsTableName: 'migration',
           migrationsRun: true,
           autoLoadEntities: true,

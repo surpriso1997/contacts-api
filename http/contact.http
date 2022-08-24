@@ -1,0 +1,39 @@
+@baseUrl="http://localhost:8000"
+@appjson="application/json"
+
+
+
+### get all posts 
+GET http://localhost:8000/contacts
+
+
+### get a post 
+GET http://localhost:8000/contacts/1
+
+
+
+### create a post 
+
+POST http://localhost:8000/contacts
+Content-Type: application/json
+
+{
+    "primaryPhoneNumber":"+9779841000000",
+    "fullName":"Ram Bahadur",
+    "userId":1
+}
+
+
+
+### update post 
+PATCH http://localhost:8000/contacts/5
+Content-Type: application/json
+
+{
+    "userId":1,
+    "fullName":"Hari Bahadur"
+}
+
+
+### dele
+DELETE http://localhost:8000/contacts/4
