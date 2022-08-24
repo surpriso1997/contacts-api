@@ -1,0 +1,15 @@
+### signup /create user 
+
+@baseUrl="http://localhost:8000"
+@appjson="application/json"
+
+
+# POST {{baseUrl}}/signup
+Post http://localhost:8000/signup
+Content-Type: application/json
+
+{
+    "email":"test@test.com",
+    "phoneNumber":"+9779841000009",
+    "password":"password"
+}

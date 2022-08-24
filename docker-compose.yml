@@ -6,6 +6,7 @@ services:
   app_server:
     container_name: nest_js
     command: yarn start:dev
+    # user: root
     ports:
       - "8000:8000"
     networks:
@@ -26,12 +27,13 @@ services:
 
   #  database service
   database:
-    container_name: postgres
+    container_name: pp
     image: postgres:13.6-alpine
+    user: root
     env_file:
       - .env
     volumes:
-      - ./pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     # ports:
     #   - "5432:5432"
     networks:
@@ -40,6 +42,9 @@ services:
 # docker network
 networks:
   backend:
+
+
 volumes:
   pg_data:
-    driver: local
+    external: true
+    name: "pg_data"
