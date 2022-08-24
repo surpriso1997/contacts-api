@@ -46,6 +46,7 @@ export class ContactsService {
     if (!contact) {
       throw new BadRequestException('Contact not found');
     }
+    console.log(updateContactDto);
 
     Object.assign(contact, updateContactDto);
 

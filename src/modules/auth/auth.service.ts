@@ -32,7 +32,6 @@ export class AuthService {
   }
 
   async signup(body: SignUpDto) {
-    console.log('sign up');
     console.log(body);
 
     const { email, password, phoneNumber } = body;
@@ -53,11 +52,10 @@ export class AuthService {
     const hash = (await scrypt(password, salt, 32)) as Buffer;
     const hashedPass = salt + '.' + hash.toString('hex');
 
-    const createdUser = this.userService.create({
+    return this.userService.create({
       email,
       password: hashedPass,
       phoneNumber,
     });
-    return createdUser;
   }
 }

@@ -16,33 +16,36 @@ export class Contact {
   @Generated('uuid')
   uuid: string;
 
-  @Column()
+  @Column({ nullable: true })
   namePrefix: string;
 
   @Column()
+  fullName: string;
+
+  @Column({ nullable: true })
   firstName: string;
-  @Column()
+  @Column({ nullable: true })
   middleName: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   nickName: string;
 
   @Column()
   primaryPhoneNumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   secondaryPhoneNumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   personalEmail: string;
 
-  @Column()
+  @Column({ nullable: true })
   workEmail: string;
 
-  @Column()
+  @Column({ nullable: true })
   profilePicture: string;
 
   @ManyToOne(() => User, (user) => user.contacts)

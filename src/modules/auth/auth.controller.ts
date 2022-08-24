@@ -24,8 +24,13 @@ export class AuthController {
       throw new BadRequestException('email or phoneNumber is required');
     }
 
-    const user = this.authService.signup(body);
-    return user;
+    try {
+      const user = this.authService.signup(body);
+      return user;
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException();
+    }
   }
 
   //   forgotPassword() {}
