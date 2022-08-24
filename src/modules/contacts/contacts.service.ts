@@ -1,26 +1,64 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersService } from '@users/users.service';
+import { Repository } from 'typeorm';
 import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
+import { Contact } from './entities/contact.entity';
 
 @Injectable()
 export class ContactsService {
-  create(createContactDto: CreateContactDto) {
-    return 'This action adds a new contact';
+  constructor(
+    @InjectRepository(Contact) private repo: Repository<Contact>,
+    private userService: UsersService,
+  ) {}
+
+  async create(createContactDto: CreateContactDto) {
+    const { userId } = createContactDto;
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      throw new BadRequestException('user not found');
+    }
+
+    const contact = this.repo.create({ ...createContactDto });
+    contact.user = user;
+
+    return this.repo.save(contact);
   }
 
-  findAll() {
-    return `This action returns all contacts`;
+  async findAll(): Promise<Contact[]> {
+    return await this.repo.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} contact`;
+    if (!id) {
+      throw new BadRequestException();
+    }
+    return this.repo.findOne({ where: { id } });
   }
 
-  update(id: number, updateContactDto: UpdateContactDto) {
-    return `This action updates a #${id} contact`;
+  async update(
+    id: number,
+    updateContactDto: Partial<CreateContactDto>,
+  ): Promise<Contact> {
+    const contact = await this.findOne(id);
+
+    if (!contact) {
+      throw new BadRequestException('Contact not found');
+    }
+
+    Object.assign(contact, updateContactDto);
+
+    return await this.repo.save(contact);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} contact`;
+  async remove(id: number) {
+    const contact = await this.findOne(id);
+
+    if (!contact) {
+      throw new BadRequestException('Contact not found');
+    }
+
+    return this.repo.remove(contact);
   }
 }
