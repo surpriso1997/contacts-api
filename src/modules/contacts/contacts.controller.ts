@@ -10,7 +10,9 @@ import {
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Contacts management')
 @Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
