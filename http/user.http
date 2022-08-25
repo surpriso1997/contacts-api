@@ -4,7 +4,7 @@
 @appjson="application/json"
 
 
-# POST {{baseUrl}}/signup
+###  POST {{baseUrl}}/signup
 Post http://localhost:8000/signup
 Content-Type: application/json
 
@@ -22,6 +22,7 @@ Content-Type: application/json
 {
     "phoneNumber":"+9779841000003",
     "password":"password"
+
 }
 
 

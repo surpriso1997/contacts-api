@@ -28,7 +28,13 @@ export class AuthService {
       throw new BadRequestException('username of password is wrong');
     }
 
-    return user;
+    /// create jwt
+    const jwtAccessKey = this.createJwtToken({
+      userId: user.id,
+      uuid: user.uuid,
+    });
+
+    return { data: { user: user, token: jwtAccessKey } };
   }
 
   async signup(body: SignUpDto) {
