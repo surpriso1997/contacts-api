@@ -5,11 +5,15 @@ import { UsersService } from '@users/users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 
 import { promisify } from 'util';
+import { JwtService } from '@nestjs/jwt';
 
 const scrypt = promisify(_scrypt);
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async login(body: LoginDto) {
     const { email = null, password, phoneNumber = null } = body;
@@ -19,6 +23,7 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('user not found');
     }
+
     const [salt, storedHash] = user.password.split('.');
 
     /// generate hash of the user password
@@ -28,7 +33,12 @@ export class AuthService {
       throw new BadRequestException('username of password is wrong');
     }
 
-    return user;
+    const jwtAccessKey = this.createJwtToken({
+      userId: user.id,
+      uuid: user.uuid,
+    });
+
+    return { data: { user: user, token: jwtAccessKey } };
   }
 
   async signup(body: SignUpDto) {
@@ -60,4 +70,13 @@ export class AuthService {
     });
     return createdUser;
   }
+
+  private createJwtToken(payload: jwtPayloadArgs) {
+    this.jwtService.sign(payload);
+  }
+}
+
+interface jwtPayloadArgs {
+  userId: number;
+  uuid: string;
 }

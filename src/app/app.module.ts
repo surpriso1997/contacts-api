@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@users/entities/user.entity';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     AuthModule,
@@ -39,6 +40,17 @@ import { User } from '@users/entities/user.entity';
           synchronize: true,
         };
       },
+    }),
+
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (cs: ConfigService) => ({
+        secret: cs.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: 60 * 60 * 24,
+        },
+      }),
     }),
   ],
   controllers: [AppController],
