@@ -17,8 +17,6 @@ export class AuthService {
 
   async login(body: LoginDto) {
     const { email = null, password, phoneNumber = null } = body;
-    console.log(`login body: `);
-    console.log(body);
     const user = await this.userService.findWithFilters({ email, phoneNumber });
 
     if (!user) {
@@ -33,12 +31,12 @@ export class AuthService {
       throw new BadRequestException('username of password is wrong');
     }
 
-    const jwtAccessKey = this.createJwtToken({
+    const accessToken = this.createJwtToken({
       userId: user.id,
       uuid: user.uuid,
     });
 
-    return { data: { user: user, token: jwtAccessKey } };
+    return { ...user, accessToken };
   }
 
   async signup(body: SignUpDto) {
@@ -70,7 +68,10 @@ export class AuthService {
   }
 
   private createJwtToken(payload: jwtPayloadArgs) {
-    this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
   }
 }
 
