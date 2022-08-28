@@ -17,7 +17,8 @@ export class AuthService {
 
   async login(body: LoginDto) {
     const { email = null, password, phoneNumber = null } = body;
-
+    console.log(`login body: `);
+    console.log(body);
     const user = await this.userService.findWithFilters({ email, phoneNumber });
 
     if (!user) {
@@ -28,7 +29,6 @@ export class AuthService {
 
     /// generate hash of the user password
     const hash = (await scrypt(password, salt, 32)) as Buffer;
-
     if (storedHash !== hash.toString('hex')) {
       throw new BadRequestException('username of password is wrong');
     }
@@ -42,7 +42,6 @@ export class AuthService {
   }
 
   async signup(body: SignUpDto) {
-    console.log('sign up');
     console.log(body);
 
     const { email, password, phoneNumber } = body;
@@ -61,14 +60,13 @@ export class AuthService {
     /// gen hash
     const salt = randomBytes(16).toString('hex');
     const hash = (await scrypt(password, salt, 32)) as Buffer;
-    const hashedPass = salt + '.' + hash;
+    const hashedPass = salt + '.' + hash.toString('hex');
 
-    const createdUser = this.userService.create({
+    return this.userService.create({
       email,
       password: hashedPass,
       phoneNumber,
     });
-    return createdUser;
   }
 
   private createJwtToken(payload: jwtPayloadArgs) {
