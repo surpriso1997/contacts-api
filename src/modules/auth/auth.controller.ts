@@ -32,7 +32,6 @@ export class AuthController {
       const user = this.authService.signup(body);
       return user;
     } catch (e) {
-      console.log(e);
       throw new BadRequestException();
     }
   }
