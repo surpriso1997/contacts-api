@@ -5,21 +5,24 @@ import { UsersService } from '@users/users.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 
 import { promisify } from 'util';
+import { JwtService } from '@nestjs/jwt';
 
 const scrypt = promisify(_scrypt);
 @Injectable()
 export class AuthService {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private jwtService: JwtService,
+  ) {}
 
   async login(body: LoginDto) {
     const { email = null, password, phoneNumber = null } = body;
-    console.log(`login body: `);
-    console.log(body);
     const user = await this.userService.findWithFilters({ email, phoneNumber });
 
     if (!user) {
       throw new BadRequestException('user not found');
     }
+
     const [salt, storedHash] = user.password.split('.');
 
     /// generate hash of the user password
@@ -28,7 +31,12 @@ export class AuthService {
       throw new BadRequestException('username of password is wrong');
     }
 
-    return user;
+    const accessToken = this.createJwtToken({
+      userId: user.id,
+      uuid: user.uuid,
+    });
+
+    return { ...user, accessToken };
   }
 
   async signup(body: SignUpDto) {
@@ -58,4 +66,16 @@ export class AuthService {
       phoneNumber,
     });
   }
+
+  private createJwtToken(payload: jwtPayloadArgs) {
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+  }
+}
+
+interface jwtPayloadArgs {
+  userId: number;
+  uuid: string;
 }

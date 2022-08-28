@@ -12,8 +12,7 @@ export class ContactsService {
     private userService: UsersService,
   ) {}
 
-  async create(createContactDto: CreateContactDto) {
-    const { userId } = createContactDto;
+  async create(createContactDto: CreateContactDto, userId: number) {
     const user = await this.userService.findOne(userId);
 
     if (!user) {
@@ -46,7 +45,6 @@ export class ContactsService {
     if (!contact) {
       throw new BadRequestException('Contact not found');
     }
-    console.log(updateContactDto);
 
     Object.assign(contact, updateContactDto);
 

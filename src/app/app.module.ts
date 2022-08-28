@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@users/entities/user.entity';
+import { JwtModule } from '@nestjs/jwt';
 import { Contact } from '@contacts/entities/contact.entity';
 @Module({
   imports: [
@@ -27,7 +28,6 @@ import { Contact } from '@contacts/entities/contact.entity';
           password: config.get<string>('POSTGRES_PASSWORD'),
           username: config.get<string>('POSTGRES_USER'),
           host: config.get<string>('POSTGRES_HOST'),
-
           port: 7000,
           entities: [User, Contact],
           migrationsTableName: 'migration',
@@ -37,6 +37,16 @@ import { Contact } from '@contacts/entities/contact.entity';
           synchronize: true,
         };
       },
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (cs: ConfigService) => ({
+        secret: cs.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: 60 * 60 * 24,
+        },
+      }),
     }),
   ],
   controllers: [AppController],

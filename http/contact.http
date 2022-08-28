@@ -1,21 +1,22 @@
 @baseUrl="http://localhost:8000"
 @appjson="application/json"
+@accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInV1aWQiOiJiNWEwNDE0Ni00N2UyLTQ5ZjAtODI4Yi1mNzA0MGU1ZWIwOGQiLCJpYXQiOjE2NjE2NzU5MDMsImV4cCI6MTY2MTY3NTk4OX0.zuvnoHOUn1TREyOpC_BXqXX2nGwm0We8fGwgnoQm3yQ"
 
 
-
-### get all posts 
+### get all contacts 
 GET http://localhost:8000/contacts
 
 
-### get a post 
+### get a contact 
 GET http://localhost:8000/contacts/1
 
 
 
-### create a post 
+### create a contact c
 
 POST http://localhost:8000/contacts
 Content-Type: application/json
+Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInV1aWQiOiJiNWEwNDE0Ni00N2UyLTQ5ZjAtODI4Yi1mNzA0MGU1ZWIwOGQiLCJpYXQiOjE2NjE2NzU5MDMsImV4cCI6MTY2MTY3NTk4OX0.zuvnoHOUn1TREyOpC_BXqXX2nGwm0We8fGwgnoQm3yQ"
 
 {
     "primaryPhoneNumber":"+9779841000000",
